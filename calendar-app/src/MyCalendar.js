@@ -13,9 +13,13 @@ function MyCalendar() {
     setValue('');
   };
 
-  // const handleSelect = (event) => {
-  //   setShowInput(event.target.value !== '');
-  // };
+  const user = {
+    1: "Kiran",
+    2: "Rowdy",
+    3: "Nikhila",
+    4: "Keerthi"
+  };
+  
 
   const handleInputChange = (event) => {
     setValue(event.target.value);
@@ -23,19 +27,25 @@ function MyCalendar() {
 
   return (
     <div className='app'>
-      <h1 className='text-center'>Calendar notes</h1>
+      <h1 className='text-center'>MyCalendar</h1>
       <div className='calendar-container'>
         <Calendar onChange={handleDateChange} value={date} />
       </div>
-      
-      {/* <select onChange={handleSelect}>
-        <div className='calendar-container'>
-          <Calendar onChange={handleDateChange} value={date} />
-        </div>
-      </select> */}
-      <p>Selected date: {date ? date.toDateString() : 'no date selected'}</p>
-      {date && <input type="text" value={value} onChange={handleInputChange} />}
-      <p>{value ? `Input value: ${value}` : ""}</p>
+
+      <p>{date ? `On ${date.toDateString()}: ` : 'no date selected'} &nbsp;
+        {
+          date &&
+          <select onChange={handleInputChange}>
+            <option value="">Select an option</option>
+            <option value="note"> Add Note</option>
+            <option value="1">Kiran</option>
+            <option value="2">Rowdy</option>
+            <option value="3">Nikhila</option>
+            <option value="4">Keerthi</option>
+          </select>
+        }
+      </p>
+      <p>{value ? `Selected: ${user[value]}` : ""}</p>
     </div>
   );
 }
