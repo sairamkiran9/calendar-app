@@ -1,0 +1,20 @@
+# ignore node_modules directory
+node_modules/
+./calendar-app/node-modules/
+
+# ignore build output
+build/
+
+# ignore development environment files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ignore log files
+*.log
+
+# ignore IDE files
+.idea/
+.vscode/
+
