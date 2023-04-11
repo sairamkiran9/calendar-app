@@ -6,7 +6,6 @@ import Calendar from 'react-calendar';
 function MyCalendar() {
   const [date, setDate] = useState(null);
   const [value, setValue] = useState('');
-  const [showInput, setShowInput] = useState(false);
 
   const handleDateChange = (date) => {
     setDate(date);
