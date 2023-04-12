@@ -1,6 +1,6 @@
 # ignore node_modules directory
 node_modules/
-./calendar-app/node-modules/
+./calendar-app/node_modules/
 
 # ignore build output
 build/
