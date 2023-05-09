@@ -7,6 +7,7 @@ import localforage from 'localforage';
 function MyCalendar() {
   const [date, setDate] = useState(null);
   const [value, setValue] = useState('');
+  const [classname, setClassName] = useState('kon');
 
   const handleDateChange = (date) => {
     setDate(date);
@@ -26,9 +27,9 @@ function MyCalendar() {
 
   const handleInputChange = (event) => {
     setValue(event.target.value);
-    writeToDb(date.toString(), event.target.value);
-    readFromDb(date.toString());
-    viewDb();
+    writeToDb(date.toLocaleDateString(), event.target.value);
+    // readFromDb(date.toLocaleDateString());
+    // viewDb();
   }
 
   const writeToDb = (k, v) => {
@@ -40,9 +41,9 @@ function MyCalendar() {
   }
 
   const clearDbByKey = () => {
-    readFromDb(date.toString());
-    localforage.removeItem(date.toString()).then(function () {
-      console.log('Record is cleared!',date);
+    // readFromDb(date);
+    localforage.removeItem(date.toLocaleDateString()).then(function () {
+      console.log('Record is cleared!', date);
     }).catch(function (err) {
       console.log(err);
     });
@@ -56,12 +57,17 @@ function MyCalendar() {
     });
   }
 
-  const readFromDb = (key) => {
-    localforage.getItem(key).then(function (value) {
-      console.log(key, value);
-    }).catch(function (err) {
-      console.log(err);
-    });
+  const readFromDb = (e, key) => {
+    e.preventDefault();
+    console.log("readFromDb", key);
+    if (key !== null) {
+      key = key.toLocaleDateString();
+      localforage.getItem(key).then(function (value) {
+        console.log("readFromDb", key, value);
+      }).catch(function (err) {
+        console.log(err);
+      });
+    }
   }
 
   const sizeOfDb = () => {
@@ -82,14 +88,48 @@ function MyCalendar() {
     });
   }
 
+  const getKey = async (key) => {
+    if (key !== null) {
+      key = key.toLocaleDateString();
+      localforage.getItem(key).then(function (value) {
+        if (value !== null && date !== null && key === date.toLocaleDateString()) {
+          console.log("getKey", key, value, user[value]);
+          setClassName(user[value]);
+          return user[value];
+        }
+        else {
+          console.log("in else");
+          setClassName("");
+          return "";
+        }
+      }).catch(function (err) {
+        console.log(err);
+      });
+    }
+  }
+
+  const tileClassName = ({ date, view }) => {
+    if (view === 'month' && date !== null) {
+      const key = getKey(date);
+      // const key = "konda";
+      return `tile-${key}`;
+    }
+    return null;
+  };
+
   return (
     <div className='app'>
       <h1 className='text-center'>MyCalendar</h1>
       <div className='calendar-container'>
-        <Calendar onChange={handleDateChange} value={date} />
+        <Calendar
+          onChange={handleDateChange}
+          value={date}
+          // tileContent={({ date, view }) => view === 'month' && date.getDay() === 0 ? <p>konda</p> : null}
+          tileClassName={tileClassName}
+        />
       </div>
 
-      <p>{date ? `On ${date.toString()}: ` : 'no date selected'} &nbsp;
+      <p>{date ? `On ${date.toLocaleDateString()}: ` : 'no date selected'} &nbsp;
         {
           date &&
           <select onChange={handleInputChange}>
@@ -106,6 +146,7 @@ function MyCalendar() {
       <p><button onClick={viewDb}>show data</button></p>
       <p><button onClick={clearDb}> Reset </button></p>
       <p><button onClick={clearDbByKey}> Clear record</button></p>
+      <p><button onClick={(e) => readFromDb(e, date)}> Read record</button></p>
     </div>
   );
 }
