@@ -5,12 +5,12 @@ import localforage from 'localforage';
 
 
 function MyCalendar() {
-  const [date, setDate] = useState(null);
+  const [selectedDate, setselectedDate] = useState(null);
   const [value, setValue] = useState('');
-  const [classname, setClassName] = useState('kon');
+  const [classList, setClassList] = useState({});
 
-  const handleDateChange = (date) => {
-    setDate(date);
+  const handleDateChange = (selectedDate) => {
+    setselectedDate(selectedDate);
     setValue('');
   };
 
@@ -18,18 +18,25 @@ function MyCalendar() {
     1: "Kiran",
     2: "Rowdy",
     3: "Nikhila",
-    4: "Keerthi"
+    4: "Keerthi",
+    5: "Keerthana"
   };
 
   useEffect(() => {
-    // console.log(`Selected date is ${date}`);
-  }, [date]);
+    // Call your function here
+    viewDb();
+  }, []);
 
   const handleInputChange = (event) => {
-    setValue(event.target.value);
-    writeToDb(date.toLocaleDateString(), event.target.value);
-    // readFromDb(date.toLocaleDateString());
-    // viewDb();
+    event.preventDefault();
+    const curValue = event.target.value;
+    const currDate = selectedDate.toLocaleDateString();
+    setValue(curValue);
+    writeToDb(currDate, curValue);
+    setClassList(prevList => {
+      // console.log("setclasslist", prevList, currDate, curValue);
+      return { ...prevList, [currDate]: curValue };
+    });
   }
 
   const writeToDb = (k, v) => {
@@ -41,9 +48,8 @@ function MyCalendar() {
   }
 
   const clearDbByKey = () => {
-    // readFromDb(date);
-    localforage.removeItem(date.toLocaleDateString()).then(function () {
-      console.log('Record is cleared!', date);
+    localforage.removeItem(selectedDate.toLocaleDateString()).then(function () {
+      console.log('Record is cleared!', selectedDate);
     }).catch(function (err) {
       console.log(err);
     });
@@ -81,6 +87,10 @@ function MyCalendar() {
   const viewDb = () => {
     localforage.iterate(function (value, key, iterationNumber) {
       console.log([key, value]);
+      setClassList(prevList => {
+        // console.log("setclasslist", prevList, currDate, curValue);
+        return { ...prevList, [key]: value };
+      });
     }).then(function () {
       console.log('Iteration has completed');
     }).catch(function (err) {
@@ -88,65 +98,60 @@ function MyCalendar() {
     });
   }
 
-  const getKey = async (key) => {
-    if (key !== null) {
-      key = key.toLocaleDateString();
-      localforage.getItem(key).then(function (value) {
-        if (value !== null && date !== null && key === date.toLocaleDateString()) {
-          console.log("getKey", key, value, user[value]);
-          setClassName(user[value]);
-          return user[value];
-        }
-        else {
-          console.log("in else");
-          setClassName("");
-          return "";
-        }
-      }).catch(function (err) {
-        console.log(err);
-      });
-    }
-  }
-
   const tileClassName = ({ date, view }) => {
-    if (view === 'month' && date !== null) {
-      const key = getKey(date);
-      // const key = "konda";
-      return `tile-${key}`;
+    const curDate = date.toLocaleDateString();
+    if (view === 'month' && curDate in classList) {
+      console.log("classList", classList);
+      return `tile-${user[classList[curDate]]}`;
     }
-    return null;
+    return '';
+  };
+
+  const buttonStyle = {
+    backgroundColor: '#804859',
+    color: 'white',
+    padding: '10px',
+    borderRadius: '50px',
+    borderColor: "transparent",
+    margin: "5px"
   };
 
   return (
-    <div className='app'>
-      <h1 className='text-center'>MyCalendar</h1>
-      <div className='calendar-container'>
-        <Calendar
-          onChange={handleDateChange}
-          value={date}
-          // tileContent={({ date, view }) => view === 'month' && date.getDay() === 0 ? <p>konda</p> : null}
-          tileClassName={tileClassName}
-        />
-      </div>
+    <div className='myapp'>
+      <h1 className='main-title'>Mayuri attendance sheet</h1>
+      <div className='main-container'>
+        <div className='calendar-container'>
+          <Calendar
+            onChange={handleDateChange}
+            value={selectedDate}
+            tileClassName={tileClassName}
+          />
+        </div>
+        <div>
 
-      <p>{date ? `On ${date.toLocaleDateString()}: ` : 'no date selected'} &nbsp;
-        {
-          date &&
-          <select onChange={handleInputChange}>
-            <option value="">Select an option</option>
-            <option value="note"> Add Note</option>
-            <option value="1">User1</option>
-            <option value="2">User2</option>
-            <option value="3">User3</option>
-            <option value="4">User4</option>
-          </select>
-        }
-      </p>
-      <p>{value ? `Selected: ${user[value]}` : ""}</p>
-      <p><button onClick={viewDb}>show data</button></p>
-      <p><button onClick={clearDb}> Reset </button></p>
-      <p><button onClick={clearDbByKey}> Clear record</button></p>
-      <p><button onClick={(e) => readFromDb(e, date)}> Read record</button></p>
+          <p>{selectedDate ? `On ${selectedDate.toLocaleDateString()}: ` : ''} &nbsp;
+            {
+              selectedDate &&
+              <select onChange={handleInputChange}>
+                <option value="">Select an option</option>
+                <option value="note"> Add Note</option>
+                <option value="1">User1</option>
+                <option value="2">User2</option>
+                <option value="3">User3</option>
+                <option value="4">User4</option>
+                <option value="5">User5</option>
+              </select>
+            }
+          </p>
+
+          <p>{value ? `Selected: ${user[value]}` : ""}</p>
+          <p><button style={buttonStyle} onClick={viewDb}>show records</button>
+            <button style={buttonStyle} onClick={clearDbByKey}> Clear record</button>
+            <button style={buttonStyle} onClick={(e) => readFromDb(e, selectedDate)}> Read record</button>
+            {/* <button style={buttonStyle} onClick={clearDb}> Reset </button> */}
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

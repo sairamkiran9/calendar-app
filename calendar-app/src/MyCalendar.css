@@ -206,3 +206,48 @@
     background: #6f48eb;
     color: white;
    }
+
+   .tile-Kiran{
+    background: #d9d44861;
+    border-radius: 6px;
+    font-weight: bold;
+    color: #297c3bbf;
+   }
+
+   .tile-Rowdy{
+    background: #00000033;
+    border-radius: 6px;
+    font-weight: bold;
+    color: #eb48ba;
+   }
+
+   .tile-Nikhila{
+    background: #0066ff33;
+    border-radius: 6px;
+    font-weight: bold;
+    color: #ff6d6d;
+   }
+
+   .tile-Keerthi{
+    background: #1f799433;
+    border-radius: 6px;
+    font-weight: bold;
+    color: #5c5294;
+   }
+
+   .tile-Keerthana{
+    background: #ff000042;
+    border-radius: 6px;
+    font-weight: bold;
+    color: #fafafa;
+   }
+
+   .main-title{
+    color: darkolivegreen;
+    text-align: center;
+   }
+
+   .main-container{
+    /* display: flex; */
+   }
+
