@@ -118,7 +118,7 @@ function MyCalendar() {
 
   return (
     <div className='myapp'>
-      <h1 className='main-title'>Mayuri attendance sheet</h1>
+      <h1 className='main-title'>MyCalendar</h1>
       <div className='main-container'>
         <div className='calendar-container'>
           <Calendar
@@ -129,10 +129,10 @@ function MyCalendar() {
         </div>
         <div>
 
-          <p>{selectedDate ? `On ${selectedDate.toLocaleDateString()}: ` : ''} &nbsp;
+          <p className='view-container'>{selectedDate ? <span className='date-label'> On {selectedDate.toLocaleDateString()}: </span> : ''} &nbsp;
             {
               selectedDate &&
-              <select onChange={handleInputChange}>
+              <select className='select-container' onChange={handleInputChange}>
                 <option value="">Select an option</option>
                 <option value="note"> Add Note</option>
                 <option value="1">User1</option>
@@ -144,12 +144,20 @@ function MyCalendar() {
             }
           </p>
 
-          <p>{value ? `Selected: ${user[value]}` : ""}</p>
+          <ul className='label-container'>
+            <li className='tile-Kiran label'> user1 </li>
+            <li className='tile-Rowdy label'> user2 </li>
+            <li className='tile-Nikhila label'> user3 </li>
+            <li className='tile-Keerthi label'> user4 </li>
+            <li className='tile-Keerthana label'> user5 </li>
+          </ul>
+
+          {/* <p>{value ? `Selected: ${user[value]}` : ""}</p>
           <p><button style={buttonStyle} onClick={viewDb}>show records</button>
             <button style={buttonStyle} onClick={clearDbByKey}> Clear record</button>
             <button style={buttonStyle} onClick={(e) => readFromDb(e, selectedDate)}> Read record</button>
-            {/* <button style={buttonStyle} onClick={clearDb}> Reset </button> */}
-          </p>
+            <button style={buttonStyle} onClick={clearDb}> Reset </button>
+          </p> */}
         </div>
       </div>
     </div>
